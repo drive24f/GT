@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+                name="setPresenter"
+                type="com.gt.ui.chat.ChatPresenter"/>
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/hw45"
+                android:id="@+id/constraintLayout2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+            <include
+                    android:id="@+id/btn_back"
+                    layout="@layout/include_back"
+                    android:layout_width="@dimen/hw45"
+                    android:layout_height="@dimen/hw45"
+                    android:onClick="@{() -> setPresenter.onClickBack()}"/>
+
+            <TextView
+                    android:text="Chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/ts16"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="@dimen/hw0"
+                    android:layout_marginStart="@dimen/hw0"
+                    android:layout_marginTop="@dimen/hw8"
+                    android:layout_marginBottom="@dimen/hw8"
+                    app:layout_constraintStart_toEndOf="@+id/btn_back"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

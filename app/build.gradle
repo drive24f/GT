@@ -1,0 +1,188 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.moallemi.advanced-build-version'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
+apply plugin: 'io.objectbox'
+import org.moallemi.gradle.internal.VersionCodeType
+
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.28.1'
+    }
+}
+
+advancedVersioning {
+
+    nameOptions {
+        versionMajor 1
+        versionMinor 0
+        versionPatch 1
+    }
+
+    codeOptions {
+        versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
+        dependsOnTasks 'debug', 'release', 'assemble'
+    }
+
+    outputOptions {
+        renameOutput true
+        nameFormat "GTest-\$buildType-\$versionName(\$versionCode)"
+    }
+}
+
+
+android {
+    signingConfigs {
+
+    }
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        applicationId prodId
+        minSdkVersion sdkVersion
+        targetSdkVersion targetVersion
+        renderscriptTargetApi renderscript.toInteger()
+        multiDexEnabled = true
+        renderscriptSupportModeEnabled false
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "release_channel"
+    productFlavors {
+        develop {
+            dimension "release_channel"
+            applicationId devId
+            versionCode advancedVersioning.versionCode
+            versionName advancedVersioning.versionName
+            minSdkVersion sdkVersion.toInteger()
+            targetSdkVersion targetVersion.toInteger()
+            renderscriptTargetApi renderscript.toInteger()
+            buildConfigField "String", "BASE_API_URL", String.format("\"%s\"", devServerURL)
+            buildConfigField "String", "YOUTUBE_KEY", youtubeKey
+            buildConfigField "Integer", "TIMEOUT", timeOut
+            buildConfigField "String", "APP_TYPE", appType
+            buildConfigField "String", "APP_NAME", appName
+            resValue "string", "app_name", devAppName
+            manifestPlaceholders = [appIcon: devAppIcon]
+        }
+
+        production {
+            dimension "release_channel"
+            applicationId prodId
+            versionCode advancedVersioning.versionCode
+            versionName advancedVersioning.versionName
+            minSdkVersion sdkVersion.toInteger()
+            targetSdkVersion targetVersion.toInteger()
+            renderscriptTargetApi renderscript.toInteger()
+            buildConfigField "String", "BASE_API_URL", String.format("\"%s\"", prodServerURL)
+            buildConfigField "String", "YOUTUBE_KEY", youtubeKey
+            buildConfigField "Integer", "TIMEOUT", timeOut
+            buildConfigField "String", "APP_TYPE", appType
+            buildConfigField "String", "APP_NAME", appName
+            resValue "string", "app_name", prodAppName
+            manifestPlaceholders = [appIcon: prodAppIcon]
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    allprojects {
+        repositories {
+            jcenter()
+            maven { url 'https://jitpack.io' }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        abortOnError false
+        disable 'MissingTranslation'
+        disable 'InvalidPackage'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+
+}
+
+dependencies {
+    configurations.all { exclude group: 'com.android.support', module: 'support-v13' }
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    testImplementation Deps.junit
+    implementation Deps.constraint_layout
+    implementation Deps.support_cardview
+    implementation Deps.support_appcompat
+    implementation Deps.support_recyclerview
+    implementation Deps.support_design
+    implementation Deps.support_support
+    implementation Deps.play_services_auth
+    implementation Deps.play_services_analytics
+    implementation Deps.play_services_analytics_impl
+    implementation Deps.play_services_location
+    implementation Deps.rxandroid
+    implementation Deps.rxjava
+    implementation Deps.okhttp
+    implementation Deps.logging_interceptor
+    implementation Deps.retrofit
+    implementation Deps.converter_gson
+    implementation Deps.rxjava2_adapter
+    implementation Deps.gson
+    implementation Deps.multidex
+    implementation Deps.glide
+    implementation Deps.shimmer
+    implementation Deps.dagger
+    implementation Deps.rxBindingDesign
+    implementation Deps.android_permission_x
+    implementation Deps.circularimageview
+    implementation Deps.draggable_panel
+    kapt Deps.glide_compiler
+    kapt Deps.dagger_compiler
+    kapt Deps.dagger_android_processor
+    compileOnly Deps.jsr250_api
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation(Deps.crashlytics) {
+        transitive = true
+    }
+
+}

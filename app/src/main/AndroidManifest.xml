@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.gt">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+            android:name=".MainApp"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher"
+            android:supportsRtl="true"
+            android:usesCleartextTraffic="true"
+            android:theme="@style/DefaultTheme"
+            tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
+
+        <activity android:name=".ui.login.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".ui.chat.ChatActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden"
+                android:theme="@style/DefaultTheme"/>
+
+        <activity
+                android:name=".ui.message.MessageActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden"
+                android:theme="@style/DefaultTheme"/>
+
+        <activity
+                android:name=".ui.room.RoomActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="stateHidden"
+                android:theme="@style/DefaultTheme"/>
+
+        <meta-data
+                android:name="io.fabric.ApiKey"
+                android:value="5dea3757264edb8d2bb0b7d26ca2719155a78ccd" />
+
+    </application>
+
+</manifest>
